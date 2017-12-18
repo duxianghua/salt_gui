@@ -4,7 +4,6 @@ chardet==3.0.4
 Django==1.9
 django-filter==1.1.0
 djangorestframework==3.7.3
-functools32==3.2.3.post2
 futures==3.2.0
 idna==2.6
 Jinja2==2.10
