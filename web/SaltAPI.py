@@ -42,5 +42,8 @@ class SaltBaseViewSet(APIView):
         ret = {
             "status": 'error'
         }
-        client = kwargs.get('client', None)
+        _tgt = kwargs.get('tgt', None)
+        _fun = kwargs.get('fun', None)
+        if _tgt and _fun:
+            ret = saltclients['local'](*args, **kwargs)
         return Response(ret)
