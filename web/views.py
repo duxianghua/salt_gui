@@ -1,6 +1,6 @@
 from .SaltAPI import SaltBaseViewSet
 
-class aaa(SaltBaseViewSet):
+class index(SaltBaseViewSet):
     '''
     aaa
     '''
