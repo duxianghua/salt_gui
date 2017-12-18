@@ -17,7 +17,7 @@ import salt.runner
 logger = logging.getLogger()
 
 # TODO: refreshing clients using cachedict
-saltclients = {'local': salt.client.get_local_client().run_job,
+saltclients = {'local': salt.client.get_local_client().cmd,
                # not the actual client we'll use.. but its what we'll use to get args
                'local_batch': salt.client.get_local_client().cmd_batch,
                'local_async': salt.client.get_local_client().run_job,

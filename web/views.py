@@ -13,7 +13,7 @@ class minions(SaltBaseViewSet):
         if mid:
             pass
         c = {'tgt': mid or '*', 'fun': 'grains.items',}
-        ret = saltclients['local'](**c)
+        ret = saltclients['local_batch'](**c)
         return Response(ret)
 
     def post(self, request, *args, **kwargs):
