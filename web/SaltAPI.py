@@ -8,7 +8,6 @@ from rest_framework.views import APIView
 
 
 # salt imports
-import saltapi
 import salt.utils
 import salt.utils.event
 from salt.utils.event import tagify
