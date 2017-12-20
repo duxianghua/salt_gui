@@ -73,14 +73,6 @@ class Jobs(BaseView):
             'fun': 'jobs.list_job' if jid else 'jobs.list_jobs',
             'jid': jid,
         }
-
-        #if jid:
-        #    lowstate.append({
-        #        'client': 'runner',
-        #        'fun': 'jobs.list_job',
-        #        'jid': jid,
-        #    })
         ret = self.exec_lowstate(lowstate)
-        print ret
         return Response(ret)
 

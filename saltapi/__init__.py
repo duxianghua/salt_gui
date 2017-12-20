@@ -29,7 +29,6 @@ class APIClient(object):
         Execute the specified function in the specified client by passing the
         lowstate
         '''
-        print low
         if not 'client' in low:
             raise SaltException('No client specified')
 
@@ -83,7 +82,6 @@ class APIClient(object):
 
         :return: Returns the result from the runner module
         '''
-        print fun
         runner = salt.runner.RunnerClient(self.opts)
         return runner.low(fun, kwargs, print_event=False)
 
