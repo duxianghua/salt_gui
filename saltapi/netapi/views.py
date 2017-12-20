@@ -60,6 +60,7 @@ class BaseView(APIView):
 class Minions(BaseView):
     http_method_names = ['get']
     def get(self, request, mid=None, *args, **kwargs):
+        print mid
         lowstate = {'client': 'local', 'tgt': mid or '*', 'fun': 'grains.items',}
         ret = self.exec_lowstate(lowstate)
         return Response(ret)
