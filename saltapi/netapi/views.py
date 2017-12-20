@@ -35,7 +35,11 @@ class BaseView(APIView):
 
     def exec_lowstate(self, lowstate):
         try:
-            self.ret['return'] = list(self.api.run(lowstate))
+            data = self.api.run(lowstate)
+            if isinstance(data, str):
+                self.ret['return'] = data
+            else:
+                self.ret['return'] = list(data)
         except Exception as e:
             self.ret['error'] = str(e)
         return self.ret
@@ -59,25 +63,26 @@ class BaseView(APIView):
 class Minions(BaseView):
     http_method_names = ['get']
     def get(self, request, mid=None, *args, **kwargs):
-        lowstate = {'tgt': mid or '*', 'fun': 'grains.items',}
+        lowstate = {'client': 'local', 'tgt': mid or '*', 'fun': 'grains.items',}
         ret = self.exec_lowstate(lowstate)
         return Response(ret)
 
 class Jobs(BaseView):
     http_method_names = ['get']
     def get(self, request, jid=None, *args, **kwargs):
-        lowstate = [{
+        lowstate = {
             'client': 'runner',
             'fun': 'jobs.lookup_jid' if jid else 'jobs.list_jobs',
             'jid': jid,
-        }]
+        }
 
-        if jid:
-            lowstate.append({
-                'client': 'runner',
-                'fun': 'jobs.list_job',
-                'jid': jid,
-            })
+        #if jid:
+        #    lowstate.append({
+        #        'client': 'runner',
+        #        'fun': 'jobs.list_job',
+        #        'jid': jid,
+        #    })
         ret = self.exec_lowstate(lowstate)
+        print ret
         return Response(ret)
 
