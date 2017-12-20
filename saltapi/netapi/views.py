@@ -32,8 +32,11 @@ class BaseView(APIView):
 
     def exec_lowstate(self, lowstate):
         print lowstate
-        return self.api.run(lowstate)
-        #return {'status': 'ok'}
+        try:
+            return self.api.run(lowstate)
+        except Exception as e:
+            ret = {'error': True}
+        return ret
 
 
     def get(self, request, *args, **kwargs):
