@@ -8,13 +8,28 @@ class index(SaltBaseViewSet):
     '''
 
 
-class minions(SaltBaseViewSet):
+class Minions(SaltBaseViewSet):
+    http_method_names = ['get']
     def get(self, request, mid=None, **kwargs):
-        if mid:
-            pass
         c = {'tgt': mid or '*', 'fun': 'grains.items',}
         ret = saltclients['local_batch'](**c)
         return Response(ret)
 
-    def post(self, request, *args, **kwargs):
-        pass
+
+class Jobs(SaltBaseViewSet):
+    http_method_names = ['get']
+    def get(self, request, jid=None, **kwargs):
+        self.lowstate = [{
+            'fun': 'jobs.lookup_jid' if jid else 'jobs.list_jobs',
+            'jid': jid,
+        }]
+
+        if jid:
+            self.lowstate.append({
+                'fun': 'jobs.list_job',
+                'jid': jid,
+            })
+
+        self.disbatch('runner')
+        ret = saltclients['local_batch'](**c)
+        return Response(ret)

@@ -21,11 +21,12 @@ saltclients = {'local': salt.client.get_local_client().cmd,
                # not the actual client we'll use.. but its what we'll use to get args
                'local_batch': salt.client.get_local_client().cmd_batch,
                'local_async': salt.client.get_local_client().run_job,
-               'runner': salt.runner.RunnerClient(salt.config.master_config('/etc/salt/master')).async,
+               'runner': salt.runner.RunnerClient(salt.config.master_config('/etc/salt/master')).low,
                }
 
 class TimeoutException(Exception):
     pass
+
 
 class SaltBaseViewSet(APIView):
     authentication_classes = (SessionAuthentication, BasicAuthentication, TokenAuthentication)
@@ -38,12 +39,9 @@ class SaltBaseViewSet(APIView):
                "return": "Welcome"}
         return Response(ret)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         ret = {
             "status": 'error'
         }
-        _tgt = kwargs.get('tgt', None)
-        _fun = kwargs.get('fun', None)
-        if _tgt and _fun:
-            ret = saltclients['local'](*args, **kwargs)
+        print request.body
         return Response(ret)
