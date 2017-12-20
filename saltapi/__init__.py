@@ -32,10 +32,6 @@ class APIClient(object):
         if not 'client' in low:
             raise SaltException('No client specified')
 
-        #if not ('token' in low or 'eauth' in low):
-        #    raise EauthAuthenticationError(
-        #            'No authentication credentials given')
-
         l_fun = getattr(self, low['client'])
         f_call = salt.utils.format_call(l_fun, low)
 
