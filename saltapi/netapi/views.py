@@ -70,7 +70,7 @@ class Jobs(BaseView):
     def get(self, request, jid=None, *args, **kwargs):
         lowstate = {
             'client': 'runner',
-            'fun': 'jobs.lookup_jid' if jid else 'jobs.list_jobs',
+            'fun': 'jobs.list_job' if jid else 'jobs.list_jobs',
             'jid': jid,
         }
 

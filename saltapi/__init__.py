@@ -85,7 +85,7 @@ class APIClient(object):
         '''
         print fun
         runner = salt.runner.RunnerClient(self.opts)
-        return runner.low(fun, kwargs)
+        return runner.low(fun, kwargs, print_event=False)
 
     def wheel(self, fun, **kwargs):
         '''
