@@ -21,5 +21,6 @@ from rest_framework.authtoken import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^login', views.obtain_auth_token),
-    url(r'salt/', include('web.urls'))
+    #url(r'salt/', include('web.urls')),
+    url(r'api/', include('saltapi.urls')),
 ]
