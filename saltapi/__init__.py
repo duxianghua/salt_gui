@@ -58,6 +58,7 @@ class APIClient(object):
         :return: Returns the result from the execution module
         '''
         local = salt.client.get_local_client(self.opts['conf_file'])
+        print kwargs
         return local.cmd(*args, **kwargs)
 
     def local_batch(self, *args, **kwargs):

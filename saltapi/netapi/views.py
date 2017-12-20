@@ -16,8 +16,6 @@ import salt.config
 import saltapi
 
 class BaseView(APIView):
-    now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    ret = {'return': '', 'time': now_time, 'error': None}
     def __init__(self):
         super(BaseView, self).__init__()
         self.opts = salt.config.master_config('/etc/salt/master')
@@ -33,13 +31,17 @@ class BaseView(APIView):
     def check_modules_permissions(self, request, *args, **kwargs):
         pass
 
-    def exec_lowstate(self, lowstate):
+    def exec_lowstate(self, low):
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ret = {'return': '', 'time': now_time, 'error': None}
+        if 'arg' in low and not isinstance(low['arg'], list):
+            low['arg'] = [low['arg']]
         try:
-            data = self.api.run(lowstate)
-            self.ret['return'] = data
+            data = self.api.run(low)
+            ret['return'] = data
         except Exception as e:
-            self.ret['error'] = str(e)
-        return self.ret
+            ret['error'] = str(e)
+        return ret
 
 
     def get(self, request, *args, **kwargs):
