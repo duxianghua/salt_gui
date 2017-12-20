@@ -36,10 +36,7 @@ class BaseView(APIView):
     def exec_lowstate(self, lowstate):
         try:
             data = self.api.run(lowstate)
-            if isinstance(data, str):
-                self.ret['return'] = data
-            else:
-                self.ret['return'] = list(data)
+            self.ret['return'] = data
         except Exception as e:
             self.ret['error'] = str(e)
         return self.ret
