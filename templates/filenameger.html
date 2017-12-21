@@ -1,0 +1,65 @@
+{% extends "base.html"%}
+{% load staticfiles %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'jstree/dist/themes/default/style.min.css' %}" />
+    <script src="{% static 'filemanager/node_modules/jquery/dist/jquery.min.js' %}"></script>
+    <script src="{% static 'filemanager/node_modules/angular/angular.min.js' %}"></script>
+    <script src="{% static 'filemanager/node_modules/angular-translate/dist/angular-translate.min.js' %}"></script>
+    <script src="{% static 'filemanager/node_modules/ng-file-upload/dist/ng-file-upload.min.js' %}"></script>
+    <script src="{% static 'filemanager/node_modules/bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'filemanager/dist/angular-filemanager.min.css' %}">
+    <script src="{% static 'filemanager/dist/angular-filemanager.min.js' %}"></script>
+{% endblock %}
+{% block content %}
+        <div class="row" ng-app="FileManagerApp">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_content" style="height: 700px; padding: 0px;overflow:auto;">
+                        <angular-filemanager></angular-filemanager>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /page content -->
+{% endblock %}
+{% block script %}
+<script type="text/javascript">
+angular.module('FileManagerApp').config(['fileManagerConfigProvider', function (config) {
+  var defaults = config.$get();
+  config.set({
+      appName: 'angular-filemanager',
+      defaultLang: 'zh_cn',
+      multiLang: true,
+
+      listUrl: '/api/files',
+      editUrl: '/api/files',
+      uploadUrl: '/api/files',
+      renameUrl: '/api/files',
+      copyUrl: '/api/files',
+      moveUrl: '/api/files',
+      removeUrl: '/api/files',
+      getContentUrl: '/api/files',
+      createFolderUrl: '/api/files',
+      downloadFileUrl: '/api/files',
+      downloadMultipleUrl: '/api/files',
+      compressUrl: '/api/files',
+      extractUrl: '/api/files',
+      permissionsUrl: '/api/files',
+      basePath: '/',
+
+      searchForm: true,
+      allowedActions: angular.extend(defaults.allowedActions, {
+          pickFiles: false,
+          pickFolders: false,
+          changePermissions: false,
+          compress: true,
+          compressChooseName: true,
+          extract: true,
+          download: true,
+          downloadMultiple: true,
+
+    }),
+  });
+}]);
+</script>
+{% endblock %}

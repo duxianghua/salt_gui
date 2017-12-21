@@ -1,0 +1,22 @@
+{% extends "base.html"%}
+{% load staticfiles %}
+{% block css %}
+{% endblock %}
+{% block content %}
+        <div class="row" id="salt-jobs">
+            <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
+                <div class="x_panel">
+                    <div class="x_content">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /page content -->
+{% endblock %}
+{% block script %}
+    <script src="{% static 'js/vue.min.js' %}"></script>
+    <script src="{% static 'js/vue-resource.min.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    <script src="{% static 'saltweb/js/salt-jobs.js' %}"></script>
+{% endblock %}

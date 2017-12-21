@@ -3,6 +3,7 @@ from functools import wraps
 import logging
 import json
 import datetime
+import os
 
 
 # rest framework imports
@@ -14,6 +15,7 @@ from rest_framework.views import APIView
 import salt.config
 
 import saltapi
+from ..utils import files
 
 class BaseView(APIView):
     def __init__(self):
@@ -78,3 +80,52 @@ class Jobs(BaseView):
         ret = self.exec_lowstate(lowstate)
         return Response(ret)
 
+
+class Grains(BaseView):
+    pass
+
+
+class Pillar(BaseView):
+    pass
+
+
+class StateTemplate(BaseView):
+    def get(self, request, fid=None, *args, **kwargs):
+        path=self.opts['file_roots']['base'][0]
+        if fid:
+            path = os.path.join(path, files.id2file(fid))
+            print path
+        ret = {'result': path}
+        ret['result'] = files.rd(path)
+        return Response(ret)
+
+    def post(self, request, *args, **kwargs):
+        file_roots=self.opts['file_roots']['base'][0]
+        try:
+            receive = json.loads(request.body)
+        except Exception as e:
+            ret = { "result": {"success": False, "error": "Parameter error: %s" %str(e)}}
+            return Response(ret, status=500)
+        if 'path' in receive:
+            receive['path'] = os.path.join(file_roots, receive['path'][1:])
+
+        if 'newPath' in receive:
+            receive['newPath'] = os.path.join(file_roots, receive['newPath'][1:])
+
+        if 'item' in receive:
+            receive['item'] = os.path.join(file_roots, receive['item'][1:])
+
+        if 'items' in receive:
+            receive['items'] = [ os.path.join(file_roots, item[1:]) for item in receive['items']]
+
+        if 'newItemPath' in receive:
+            receive['newItemPath'] = os.path.join(file_roots, receive['newItemPath'][1:])
+
+        print receive
+        try:
+            fun = getattr(files, receive['action'])
+            ret = {'result': fun(**receive)}
+            return Response(ret)
+        except Exception as e:
+            ret = {"result": {"success": False, "error": "%s" % str(e)}}
+            return Response(ret, status=500)
