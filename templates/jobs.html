@@ -1,13 +1,35 @@
 {% extends "base.html"%}
 {% load staticfiles %}
 {% block css %}
+    <link rel="stylesheet" href="{% static 'css/element-ui.css' %}">
 {% endblock %}
 {% block content %}
         <div class="row" id="salt-jobs">
             <div class="col-md-12 col-xs-12 col-lg-12 col-sm-12">
                 <div class="x_panel">
                     <div class="x_content">
-
+                        <el-table
+                             :data="JobsData"
+                             style="width: 100%">
+                             <el-table-column
+                               prop="Jobsid"
+                               label="Jobsid"
+                               width="180">
+                             </el-table-column>
+                             <el-table-column
+                               prop="Function"
+                               label="Function"
+                               width="180">
+                             </el-table-column>
+                             <el-table-column
+                               prop="User"
+                               label="User">
+                             </el-table-column>
+                            <el-table-column
+                               prop="Target"
+                               label="Target">
+                             </el-table-column>
+                           </el-table>
                     </div>
                 </div>
             </div>
@@ -17,6 +39,7 @@
 {% block script %}
     <script src="{% static 'js/vue.min.js' %}"></script>
     <script src="{% static 'js/vue-resource.min.js' %}"></script>
+    <script src="{% static 'js/element-ui.js' %}"></script>
     <script src="{% static 'js/axios.min.js' %}"></script>
     <script src="{% static 'saltweb/js/salt-jobs.js' %}"></script>
 {% endblock %}
