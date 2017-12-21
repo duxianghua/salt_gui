@@ -16,7 +16,7 @@ var vm = new Vue({
     },
     methods: {
         LoadJobs: function () {
-            axios.get('http://192.168.1.212/api/jobs').then((result)=>{
+            axios.get('/api/jobs').then((result)=>{
                 this.JobsData = result.data
             });
         },
