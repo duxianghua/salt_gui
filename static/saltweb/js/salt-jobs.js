@@ -17,7 +17,7 @@ var vm = new Vue({
     methods: {
         LoadJobs: function () {
             axios.get('/api/jobs').then((result)=>{
-                this.JobsData = result.data
+                this.JobsData = result.data.return
             });
         },
       }
@@ -26,8 +26,6 @@ var vm = new Vue({
 Vue.http.interceptors.push((request, next) => {
     var csrftoken = getCookie('csrftoken');
     request.headers.set('Authorization', 'Token 215a4d5fca132d87df8f68f48e8373d6bf1ffc16');
-    request.headers.set('Content-Type', 'application/json');
-    request.headers.set('Access-Control-Allow-Origin', '*');
     next((request) =>{
         return request
     });
