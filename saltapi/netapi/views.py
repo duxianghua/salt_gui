@@ -78,13 +78,15 @@ class Jobs(BaseView):
             'jid': jid,
         }
         ret = self.exec_lowstate(lowstate)
-        def dict2list(d):
-            l = []
-            for k,v in d.items():
-                v['Jobsid'] = k
-                l.append(v)
-            return l
-        ret['return'] = dict2list(ret['return'])
+        if not jid:
+            def dict2list(d):
+                l = []
+                for k, v in d.items():
+                    v['Jobsid'] = k
+                    l.append(v)
+                return l
+
+            ret['return'] = dict2list(ret['return'])
         return Response(ret)
 
 
