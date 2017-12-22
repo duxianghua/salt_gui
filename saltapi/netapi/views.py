@@ -65,28 +65,34 @@ class Minions(BaseView):
     http_method_names = ['get']
     def get(self, request, mid=None, *args, **kwargs):
         print mid
-        lowstate = {'client': 'local', 'tgt': mid or '*', 'fun': 'grains.items',}
-        ret = self.exec_lowstate(lowstate)
+        low = {'client': 'local', 'tgt': mid or '*', 'fun': 'grains.items',}
+        ret = self.exec_lowstate(low)
         return Response(ret)
 
 class Jobs(BaseView):
     http_method_names = ['get']
     def get(self, request, jid=None, *args, **kwargs):
-        lowstate = {
+        low = {
             'client': 'runner',
             'fun': 'jobs.list_job' if jid else 'jobs.list_jobs',
             'jid': jid,
         }
-        ret = self.exec_lowstate(lowstate)
-        if not jid:
-            def dict2list(d):
-                l = []
-                for k, v in d.items():
-                    v['Jobsid'] = k
-                    l.append(v)
-                return l
+        try:
+            data = self.api.run(low)
+        except Exception as e:
+            return Response({'success':False, 'error': '%s' %str(e)}, status=500)
 
-            ret['return'] = dict2list(ret['return'])
+        def format(d):
+            l = []
+            for k, v in d.items():
+                v['jid'] = k
+                l.append(v)
+            return l
+
+        if not jid:
+            ret = {'result': format(data)}
+        else:
+            ret = {'result': data}
         return Response(ret)
 
 
