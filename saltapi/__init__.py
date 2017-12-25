@@ -95,5 +95,6 @@ class APIClient(object):
         :return: Returns the result from the wheel module
         '''
         kwargs['fun'] = fun
+        kwargs.pop('client')
         wheel = salt.wheel.Wheel(self.opts)
-        return wheel.master_call(**kwargs)
+        return wheel.cmd(**kwargs)

@@ -17,6 +17,8 @@ import salt.config
 import saltapi
 from ..utils import files
 
+
+
 class BaseView(APIView):
     def __init__(self):
         super(BaseView, self).__init__()
@@ -47,17 +49,20 @@ class BaseView(APIView):
 
 
     def get(self, request, *args, **kwargs):
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         import inspect
         clients = [name for name, _ in inspect.getmembers(saltapi.APIClient,
                 predicate=inspect.ismethod) if not name.startswith('__')]
         clients.remove('run')
-        self.ret['return'] = "Welcome"
-        self.ret['client'] = clients
+        ret = {'return': '', 'time': now_time, 'error': None}
+        ret['return'] = "Welcome"
+        ret['client'] = clients
 
-        return Response(self.ret)
+        return Response(ret)
 
     def post(self, request, *args, **kwargs):
         lowstate = json.loads(request.body)
+        print lowstate
         ret = self.exec_lowstate(lowstate)
         return Response(ret)
 
