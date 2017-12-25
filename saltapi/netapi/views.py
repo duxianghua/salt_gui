@@ -77,22 +77,23 @@ class Jobs(BaseView):
             'fun': 'jobs.list_job' if jid else 'jobs.list_jobs',
             'jid': jid,
         }
-        try:
-            data = self.api.run(low)
-        except Exception as e:
-            return Response({'success':False, 'error': '%s' %str(e)}, status=500)
-
-        def format(d):
-            l = []
-            for k, v in d.items():
-                v['jid'] = k
-                l.append(v)
-            return l
-
-        if not jid:
-            ret = {'result': format(data)}
-        else:
-            ret = {'result': data}
+#        try:
+#            data = self.api.run(low)
+#        except Exception as e:
+#            return Response({'success':False, 'error': '%s' %str(e)}, status=500)
+#
+#        def format(d):
+#            l = []
+#            for k, v in d.items():
+#                v['jid'] = k
+#                l.append(v)
+#            return l
+#
+#        if not jid:
+#            ret = {'result': format(data)}
+#        else:
+#            ret = {'result': data}
+        ret = self.exec_lowstate(low)
         return Response(ret)
 
 
