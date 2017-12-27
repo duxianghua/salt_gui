@@ -6,7 +6,13 @@ api = saltapi.APIClient(opts)
 
 def list_all(*args, **kwargs):
     fun = 'key.list_all'
-    return api.wheel(fun)
+    ret = api.wheel(fun)
+    ret.pop['local']
+    for i in ret:
+        if i != 'local':
+            ret[i] = [{'select': False, 'mid': x} for x in ret[i]]
+
+
 
 def accept(minions, **kwargs):
     fun = 'key.accept'
