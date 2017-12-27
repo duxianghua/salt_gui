@@ -102,16 +102,18 @@ class Keys(BaseView):
         ret = {'return': '', 'time': now_time, 'error': None}
         actions = ['accept', 'delete', 'reject']
         result = json.loads(request.body)
+        print result
         action = getattr(result, 'action', None)
-        if action not in actions:
-            ret['error'] = 'Not find action: %s' %action
+        if result.has_key('action') and result.has_key('minions') and result['action'] in actions:
+            fun = 'key.%s' % result['action']
+            low = {'fun': fun, 'arg': result['minions'], 'client': 'wheel'}
+            ret = self.exec_lowstate(low)
+            return Response(ret)
+        else:
+            ret['error'] = 'Not find action: %s' % action
             return Response(ret, status=500)
 
-        fun = 'key.%s' %action
-        match = {'minions': result['minions']}
-        low = {'fun': fun, 'match': match}
-        ret = self.exec_lowstate(low)
-        return Response(ret)
+
 
 class Grains(BaseView):
     pass
