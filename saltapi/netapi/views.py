@@ -16,6 +16,7 @@ import salt.config
 
 import saltapi
 from ..utils import files
+from . import keys as key
 
 
 
@@ -100,19 +101,17 @@ class Keys(BaseView):
         return Response(ret)
 
     def post(self, request, *args, **kwargs):
-        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        ret = {'return': '', 'time': now_time, 'error': None}
-        funList = ['key.accept', 'key.delete', 'key.reject']
-        result = json.loads(request.body)
-        action = getattr(result, 'action', None)
+        receive = json.loads(request.body)
+        func = getattr(key, receive['action'])
+        ret = {'result': func(**receive)}
+        try:
+            func = getattr(key, receive['action'])
+            ret = {'result': func(**receive)}
+            return Response(ret)
+        except Exception as e:
+            ret = {"result": {"success": False, "error": "%s" % str(e)}}
+            return Response(ret, status=500)
 
-        if result.has_key('fun') and result.has_key('minions') and result['fun'] in funList:
-            low = result
-            ret = self.exec_lowstate(low)
-        else:
-            ret['error'] = 'Not find action: %s' % action
-            ret['status'] = 500
-        return Response(ret, status=ret['status'])
 
 
 

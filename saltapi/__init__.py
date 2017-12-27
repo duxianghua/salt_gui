@@ -94,7 +94,8 @@ class APIClient(object):
 
         :return: Returns the result from the wheel module
         '''
-        kwargs['fun'] = fun
-        kwargs.pop('client')
+        if kwargs.has_key('client'):
+            kwargs.pop('client')
+        kwargs['print_event'] = False
         wheel = salt.wheel.Wheel(self.opts)
-        return wheel.cmd(print_event=False, **kwargs)
+        return wheel.cmd(fun, **kwargs)
