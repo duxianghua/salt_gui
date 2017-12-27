@@ -96,8 +96,8 @@ class Jobs(BaseView):
 class Keys(BaseView):
     http_method_names = ['get', 'post']
     def get(self, request, *args, **kwargs):
-        low = {'fun': 'key.list_all', 'client': 'wheel'}
-        ret = self.exec_lowstate(low)
+        func = getattr(key, 'list_all')
+        ret = {'result': func()}
         return Response(ret)
 
     def post(self, request, *args, **kwargs):
