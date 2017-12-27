@@ -7,8 +7,7 @@ api = saltapi.APIClient(opts)
 def list_all(*args, **kwargs):
     fun = 'key.list_all'
     ret = api.wheel(fun)
-    print ret
-    ret.pop['local']
+    ret.pop('local')
     for i in ret:
         if i != 'local':
             ret[i] = [{'select': False, 'mid': x} for x in ret[i]]
