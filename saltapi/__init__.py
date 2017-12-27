@@ -97,4 +97,4 @@ class APIClient(object):
         kwargs['fun'] = fun
         kwargs.pop('client')
         wheel = salt.wheel.Wheel(self.opts)
-        return wheel.cmd(**kwargs)
+        return wheel.cmd(print_event=False, **kwargs)
