@@ -43,8 +43,10 @@ class BaseView(APIView):
         try:
             data = self.api.run(low)
             ret['return'] = data
+            ret['status'] = 200
         except Exception as e:
             ret['error'] = str(e)
+            ret['status'] = 500
         return ret
 
 
@@ -103,13 +105,14 @@ class Keys(BaseView):
         funList = ['key.accept', 'key.delete', 'key.reject']
         result = json.loads(request.body)
         action = getattr(result, 'action', None)
+
         if result.has_key('fun') and result.has_key('minions') and result['fun'] in funList:
             low = result
             ret = self.exec_lowstate(low)
-            return Response(ret)
         else:
             ret['error'] = 'Not find action: %s' % action
-            return Response(ret, status=500)
+            ret['status'] = 500
+        return Response(ret, status=ret['status'])
 
 
 
