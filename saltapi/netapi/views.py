@@ -100,13 +100,11 @@ class Keys(BaseView):
     def post(self, request, *args, **kwargs):
         now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         ret = {'return': '', 'time': now_time, 'error': None}
-        actions = ['accept', 'delete', 'reject']
+        funList = ['key.accept', 'key.delete', 'key.reject']
         result = json.loads(request.body)
-        print result
         action = getattr(result, 'action', None)
-        if result.has_key('action') and result.has_key('minions') and result['action'] in actions:
-            fun = 'key.%s' % result['action']
-            low = {'fun': fun, 'arg': result['minions'], 'client': 'wheel'}
+        if result.has_key('fun') and result.has_key('minions') and result['fun'] in funList:
+            low = result
             ret = self.exec_lowstate(low)
             return Response(ret)
         else:
