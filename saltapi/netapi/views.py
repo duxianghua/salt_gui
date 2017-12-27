@@ -62,9 +62,13 @@ class BaseView(APIView):
 
     def post(self, request, *args, **kwargs):
         lowstate = json.loads(request.body)
-        print lowstate
         ret = self.exec_lowstate(lowstate)
-        return Response(ret)
+        if isinstance(ret['return'], dict):
+            return Response(ret)
+        else:
+            ret['error'] = 'Internal error, please contact the administrator'
+            ret['return'] = None
+            return Response(ret, status=500)
 
 class Minions(BaseView):
     http_method_names = ['get']
@@ -82,25 +86,32 @@ class Jobs(BaseView):
             'fun': 'jobs.list_job' if jid else 'jobs.list_jobs',
             'jid': jid,
         }
-#        try:
-#            data = self.api.run(low)
-#        except Exception as e:
-#            return Response({'success':False, 'error': '%s' %str(e)}, status=500)
-#
-#        def format(d):
-#            l = []
-#            for k, v in d.items():
-#                v['jid'] = k
-#                l.append(v)
-#            return l
-#
-#        if not jid:
-#            ret = {'result': format(data)}
-#        else:
-#            ret = {'result': data}
         ret = self.exec_lowstate(low)
         return Response(ret)
 
+
+class Keys(BaseView):
+    http_method_names = ['get', 'post']
+    def get(self, request, *args, **kwargs):
+        low = {'fun': 'key.list_all', 'client': 'wheel'}
+        ret = self.exec_lowstate(low)
+        return Response(ret)
+
+    def post(self, request, *args, **kwargs):
+        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        ret = {'return': '', 'time': now_time, 'error': None}
+        actions = ['accept', 'delete', 'reject']
+        result = json.loads(request.body)
+        action = getattr(result, 'action', None)
+        if action not in actions:
+            ret['error'] = 'Not find action: %s' %action
+            return Response(ret, status=500)
+
+        fun = 'key.%s' %action
+        match = {'minions': result['minions']}
+        low = {'fun': fun, 'match': match}
+        ret = self.exec_lowstate(low)
+        return Response(ret)
 
 class Grains(BaseView):
     pass
